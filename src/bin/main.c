@@ -19,6 +19,24 @@ InputBuffer *new_input_buffer() {
     return inbuf;
 }
 
+typedef enum {
+    META_CMD_SUCCESS,
+    META_CMD_UNRECOGNISED_COMMAND,
+} MetaCmdResult;
+
+typedef enum {
+    PREPARE_SUCCESS,
+    PREPARE_UNRECOGNISED_STATEMENT,
+} PrepareResult;
+
+typedef enum {
+    STMT_INSERT,
+} StatementType;
+
+typedef struct {
+    StatementType type;
+} Statement;
+
 void close_input_buffer(InputBuffer *inbuf) {
     free(inbuf->buf);
     free(inbuf);
@@ -38,6 +56,17 @@ static void read_input(InputBuffer *inbuf) {
     inbuf->buf[bytes_read - 1] = '\0';
 }
 
+MetaCmdResult do_meta_command(InputBuffer *inbuf) {
+    return META_CMD_UNRECOGNISED_COMMAND;
+}
+
+PrepareResult prepare_statement(InputBuffer *inbuf, Statement *stmt) {
+    return PREPARE_UNRECOGNISED_STATEMENT;
+}
+
+void execute_statement(Statement *stmt) {
+}
+
 int main(int argc, char *argv[]) {
     InputBuffer *input_buffer = new_input_buffer();
 
@@ -45,12 +74,28 @@ int main(int argc, char *argv[]) {
         print_prompt();
         read_input(input_buffer);
 
-        if (strcmp(input_buffer->buf, ".exit") == 0) {
-            close_input_buffer(input_buffer);
-            exit(EXIT_SUCCESS);
-        } else {
-            printf("Unrecognized command '%s'.\n", input_buffer->buf);
+        if (input_buffer->buf[0] == '.') {
+            switch (do_meta_command(input_buffer)) {
+                case META_CMD_SUCCESS:
+                    continue;
+                case META_CMD_UNRECOGNISED_COMMAND:
+                    printf("Unrecognized command '%s'.\n", input_buffer->buf);
+                    continue;
+            }
         }
+
+        Statement stmt = { STMT_INSERT };
+        switch (prepare_statement(input_buffer, &stmt)) {
+            case PREPARE_SUCCESS:
+                break;
+            case PREPARE_UNRECOGNISED_STATEMENT:
+                printf("Unrecognized keyword at start of '%s'.\n", input_buffer->buf);
+                continue;
+        }
+
+        execute_statement(&stmt);
+        printf("Executed.\n");
+
     }
 
     return 0;
