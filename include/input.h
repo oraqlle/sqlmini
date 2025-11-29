@@ -9,8 +9,6 @@
 #include <stddef.h>
 #include <stdio.h>
 
-typedef long long int ssize_t;
-
 /**
  * @brief ABC
  */
@@ -29,11 +27,6 @@ InputBuffer *new_input_buffer(void);
  * @brief ABC
  */
 void close_input_buffer(InputBuffer *inbuf);
-
-/**
- * @brief ABC
- */
-ssize_t reads(char **restrict lineptr, size_t *restrict n, int delim, FILE *stream);
 
 /**
  * @brief ABC

@@ -1,5 +1,6 @@
 #include "input.h"
 
+#include <stdio.h>
 #include <stdlib.h>
 
 InputBuffer *new_input_buffer(void) {
@@ -17,12 +18,8 @@ void close_input_buffer(InputBuffer *inbuf) {
     free(inbuf);
 }
 
-ssize_t reads(char **restrict lineptr, size_t *restrict n, int delim, FILE *stream) {
-    return -1;
-}
-
 void read_input(InputBuffer *inbuf) {
-    ssize_t bytes_read = reads(&inbuf->buf, &inbuf->len, '\n', stdin);
+    ssize_t bytes_read = getline(&inbuf->buf, &inbuf->len, stdin);
 
     if (bytes_read <= 0) {
         printf("Error reading input\n");
