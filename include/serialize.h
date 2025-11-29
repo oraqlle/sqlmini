@@ -16,6 +16,6 @@ void serialize_row(Row *src, byte_t *dst);
 /**
  * @brief ABC
  */
-void derialize_row(byte_t *src, Row *dst);
+void deserialize_row(byte_t *src, Row *dst);
 
 #endif // sqlmini_dbvm_h

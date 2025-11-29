@@ -6,6 +6,8 @@
 #ifndef sqlmini_input_h
 #define sqlmini_input_h
 
+#include "table.h"
+
 #include <stddef.h>
 #include <stdio.h>
 
@@ -32,5 +34,10 @@ void close_input_buffer(InputBuffer *inbuf);
  * @brief ABC
  */
 void read_input(InputBuffer *inbuf);
+
+/**
+ * @brief ABC
+ */
+void print_row(Row *row);
 
 #endif // sqlmini_input_h

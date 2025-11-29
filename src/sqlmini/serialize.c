@@ -9,7 +9,7 @@ void serialize_row(Row *src, byte_t *dst) {
     memcpy(dst + EMAIL_OFFSET, &src->email, EMAIL_SIZE);
 }
 
-void derialize_row(byte_t *src, Row *dst) {
+void deserialize_row(byte_t *src, Row *dst) {
     memcpy(&dst->id, src + ID_OFFSET, ID_SIZE);
     memcpy(&dst->username, src + USERNAME_OFFSET, USERNAME_SIZE);
     memcpy(&dst->email, src + EMAIL_OFFSET, EMAIL_SIZE);

@@ -38,10 +38,23 @@ static const uint32_t ROWS_PER_PAGE = PAGE_SIZE / ROW_SIZE;
 static const uint32_t TABLE_MAX_ROWS = ROWS_PER_PAGE * TABLE_MAX_PAGES;
 
 typedef struct {
-    uint32_t new_rows;
+    uint32_t num_rows;
     byte_t *pages[TABLE_MAX_PAGES];
 } Table;
 
-void *row_slot(Table *table, uint32_t row_num);
+/**
+ * @brief ABC
+ */
+Table *new_table(void);
+
+/**
+ * @brief ABC
+ */
+void free_table(Table *table);
+
+/**
+ * @brief ABC
+ */
+byte_t *row_slot(Table *table, uint32_t row_num);
 
 #endif // sqlmini_table_h

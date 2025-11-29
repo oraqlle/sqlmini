@@ -27,6 +27,7 @@ MetaCmdResult do_meta_command(InputBuffer *inbuf) {
 
 int main(int argc, char *argv[]) {
     InputBuffer *input_buffer = new_input_buffer();
+    Table *table = new_table();
 
     while (true) {
         print_prompt();
@@ -48,27 +49,33 @@ int main(int argc, char *argv[]) {
             }
         }
 
-        Statement stmt = {STMT_INSERT};
+        Statement stmt = {STMT_INSERT, {0, "ABC", "name@example.com"}};
         switch (prepare_statement(input_buffer, &stmt)) {
             case PREPARE_SUCCESS:
                 break;
             case PREPARE_SYNTAX_ERROR:
-                printf("syntax\n");
+                printf("Syntax error. Could not parse statement.\n");
                 break;
             case PREPARE_UNRECOGNISED_STATEMENT:
                 printf("Unrecognized keyword at start of '%s'.\n", input_buffer->buf);
                 continue;
         }
 
-        switch (execute_statement(&stmt, NULL)) {
+        switch (execute_statement(&stmt, table)) {
             case EXECUTE_SUCCESS:
                 printf("Executed.\n");
+                break;
+            case EXECUTE_TABLE_FULL:
+                printf("Error: Table full.\n");
                 break;
             case EXECUTE_ERROR:
                 printf("Failed to execute.\n");
                 break;
         }
     }
+
+    close_input_buffer(input_buffer);
+    free_table(table);
 
     return 0;
 }

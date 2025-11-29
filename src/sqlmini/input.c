@@ -1,5 +1,7 @@
 #include "input.h"
+#include "table.h"
 
+#include <inttypes.h>
 #include <stdio.h>
 #include <stdlib.h>
 
@@ -30,3 +32,6 @@ void read_input(InputBuffer *inbuf) {
     inbuf->buf[bytes_read - 1] = '\0';
 }
 
+void print_row(Row *row) {
+    printf("|  %-.8u  |  %-15s  |  %-15s  |\n", row->id, row->username, row->email);
+}
