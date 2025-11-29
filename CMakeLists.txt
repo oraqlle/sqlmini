@@ -10,10 +10,11 @@ project(
 # ---- Declare library ----
 add_library(
     sqlmini OBJECT
+    src/sqlmini/compiler.c
     src/sqlmini/dbvm.c
     src/sqlmini/input.c
     src/sqlmini/serialize.c
-    src/sqlmini/types.c
+    src/sqlmini/table.c
 )
 
 target_include_directories(

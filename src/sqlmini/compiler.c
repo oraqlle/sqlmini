@@ -1,6 +1,6 @@
-#include "input.h"
-#include "types.h"
+#include "compiler.h"
 
+#include <stdio.h>
 #include <string.h>
 
 PrepareResult prepare_statement(InputBuffer *inbuf, Statement *stmt) {

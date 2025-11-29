@@ -1,6 +1,7 @@
-#include "types.h"
+#include "compiler.h"
 #include "dbvm.h"
 #include "input.h"
+#include "table.h"
 
 #include <stdbool.h>
 #include <stdio.h>
@@ -51,13 +52,22 @@ int main(int argc, char *argv[]) {
         switch (prepare_statement(input_buffer, &stmt)) {
             case PREPARE_SUCCESS:
                 break;
+            case PREPARE_SYNTAX_ERROR:
+                printf("syntax\n");
+                break;
             case PREPARE_UNRECOGNISED_STATEMENT:
                 printf("Unrecognized keyword at start of '%s'.\n", input_buffer->buf);
                 continue;
         }
 
-        execute_statement(&stmt);
-        printf("Executed.\n");
+        switch (execute_statement(&stmt, NULL)) {
+            case EXECUTE_SUCCESS:
+                printf("Executed.\n");
+                break;
+            case EXECUTE_ERROR:
+                printf("Failed to execute.\n");
+                break;
+        }
     }
 
     return 0;

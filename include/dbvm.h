@@ -6,11 +6,27 @@
 #ifndef sqlmini_dbvm_h
 #define sqlmini_dbvm_h
 
-#include "types.h"
+#include "compiler.h"
+#include "table.h"
+
+typedef enum {
+    EXECUTE_SUCCESS,
+    EXECUTE_ERROR,
+} ExecuteResult;
 
 /**
  * @brief ABC
  */
-void execute_statement(Statement *stmt);
+ExecuteResult execute_insert(Statement *stmt, Table *table);
+
+/**
+ * @brief ABC
+ */
+ExecuteResult execute_select(Statement *stmt, Table *table);
+
+/**
+ * @brief ABC
+ */
+ExecuteResult execute_statement(Statement *stmt, Table *table);
 
 #endif // sqlmini_dbvm_h

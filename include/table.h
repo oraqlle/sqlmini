@@ -3,12 +3,12 @@
  * @file types.h
  */
 
-#ifndef sqlmini_types_h
-#define sqlmini_types_h
-
-#include "input.h"
+#ifndef sqlmini_table_h
+#define sqlmini_table_h
 
 #include <stdint.h>
+
+typedef unsigned char byte_t;
 
 #define COLUMN_USERNAME_SIZE 32
 #define COLUMN_EMAIL_SIZE 255
@@ -22,22 +22,6 @@ typedef struct {
     char email[COLUMN_EMAIL_SIZE];
 } Row;
 
-/**
- * @brief ABC
- */
-typedef enum {
-    STMT_INSERT,
-    STMT_SELECT,
-} StatementType;
-
-/**
- * @brief ABC
- */
-typedef struct {
-    StatementType type;
-    Row row_to_insert;
-} Statement;
-
 #define size_of_attribute(Struct, Attribute) sizeof(((Struct *)0)->Attribute)
 
 static const uint32_t ID_SIZE = size_of_attribute(Row, id);
@@ -48,18 +32,16 @@ static const uint32_t USERNAME_OFFSET = ID_OFFSET + ID_SIZE;
 static const uint32_t EMAIL_OFFSET = USERNAME_OFFSET + USERNAME_SIZE;
 static const uint32_t ROW_SIZE = ID_SIZE + USERNAME_SIZE + EMAIL_SIZE;
 
-/**
- * @brief ABC
- */
-typedef enum {
-    PREPARE_SUCCESS,
-    PREPARE_SYNTAX_ERROR,
-    PREPARE_UNRECOGNISED_STATEMENT,
-} PrepareResult;
+#define TABLE_MAX_PAGES 100
+static const uint32_t PAGE_SIZE = 4096;
+static const uint32_t ROWS_PER_PAGE = PAGE_SIZE / ROW_SIZE;
+static const uint32_t TABLE_MAX_ROWS = ROWS_PER_PAGE * TABLE_MAX_PAGES;
 
-/**
- * @brief ABC
- */
-PrepareResult prepare_statement(InputBuffer *inbuf, Statement *stmt);
+typedef struct {
+    uint32_t new_rows;
+    byte_t *pages[TABLE_MAX_PAGES];
+} Table;
 
-#endif // sqlmini_types_h
+void *row_slot(Table *table, uint32_t row_num);
+
+#endif // sqlmini_table_h
