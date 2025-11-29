@@ -6,7 +6,7 @@
 #ifndef sqlmini_dbvm_h
 #define sqlmini_dbvm_h
 
-#include "compiler.h"
+#include "types.h"
 
 /**
  * @brief ABC
