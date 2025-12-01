@@ -26,8 +26,14 @@ MetaCmdResult do_meta_command(InputBuffer *inbuf) {
 }
 
 int main(int argc, char *argv[]) {
+    if (argc < 2) {
+        printf("Must supply a database filename.\n");
+        exit(EXIT_FAILURE);
+    }
+
+    char *filename = argv[1];
+    Table *table = db_open(filename);
     InputBuffer *input_buffer = new_input_buffer();
-    Table *table = db_open("tmp.sqlmini");
 
     while (true) {
         print_prompt();
@@ -41,9 +47,11 @@ int main(int argc, char *argv[]) {
                     printf("Unrecognized command '%s'.\n", input_buffer->buf);
                     continue;
                 case META_EXIT_FAILURE:
+                    db_close(table);
                     exit(EXIT_FAILURE);
                     break;
                 case META_EXIT_SUCCESS:
+                    db_close(table);
                     exit(EXIT_SUCCESS);
                     break;
             }

@@ -12,4 +12,5 @@ CMakeFiles/*
 Testing/*
 */logs/*
 bin/
+tmp.db
 

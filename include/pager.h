@@ -1,6 +1,6 @@
 /** @brief ABC
  *
- * @file types.h
+ * @file pager.h
  */
 
 #ifndef sqlmini_pager_h
@@ -22,6 +22,8 @@ typedef struct {
 } Pager;
 
 Pager *pager_open(const char *filename);
+
+void pager_flush(Pager *pager, uint64_t page_num, uint64_t page_size);
 
 byte_t *get_page(Pager *pager, uint64_t page_num);
 
