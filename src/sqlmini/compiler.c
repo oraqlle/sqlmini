@@ -17,6 +17,9 @@ PrepareResult prepare_insert(InputBuffer *inbuf, Statement *stmt) {
             return PREPARE_SYNTAX_ERROR;
         }
 
+        if (id_str[0] == '-') {
+            return PREPARE_NEGATIVE_ID;
+        }
         uint32_t id = strtoul(id_str, NULL, 10);
 
         if (strlen(uname) > COLUMN_USERNAME_SIZE) {
