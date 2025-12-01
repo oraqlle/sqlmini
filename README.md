@@ -28,11 +28,19 @@ Available platforms:
 
 ## Testing
 
-### Testing - Sanitizers
+### Sanitizers
 
 ```sh
 cmake -S . -B build/sanitize --preset=sanitize
 cmake --build build/sanitize
 build/sanitize/sqlmini
+```
+
+### Insert Tests with Ruby
+
+```sh
+bundle install
+bundle binstubs rspec-core
+bundle exec rspec
 ```
 
