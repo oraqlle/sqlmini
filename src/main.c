@@ -49,7 +49,7 @@ int main(int argc, char *argv[]) {
             }
         }
 
-        Statement stmt = {STMT_INSERT, {0, "ABC", "name@example.com"}};
+        Statement stmt = {STMT_INSERT, {0, {0}, {0}}};
         switch (prepare_statement(input_buffer, &stmt)) {
             case PREPARE_SUCCESS:
                 break;

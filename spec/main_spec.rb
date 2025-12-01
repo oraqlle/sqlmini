@@ -51,12 +51,12 @@ describe 'database' do
     ]
 
     result = run_script(script)
-  expect(result).to match_array([
-      "db > Executed.",
-      "db > |  00000001  |  #{long_username}  |  #{long_email}  |",
-      "Executed.",
-      "db > ",
-  ])
+    expect(result).to match_array([
+        "db > Executed.",
+        "db > |  00000001  |  #{long_username}  |  #{long_email}  |",
+        "Executed.",
+        "db > ",
+    ])
   end
 
 end

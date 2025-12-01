@@ -14,6 +14,7 @@ PrepareResult prepare_statement(InputBuffer *inbuf, Statement *stmt) {
         if (args_assigned < 3) {
             return PREPARE_SYNTAX_ERROR;
         }
+
         return PREPARE_SUCCESS;
     }
 
