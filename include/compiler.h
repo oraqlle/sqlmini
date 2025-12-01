@@ -31,6 +31,7 @@ typedef struct {
 typedef enum {
     PREPARE_SUCCESS,
     PREPARE_SYNTAX_ERROR,
+    PREPARE_STRING_TOO_LONG,
     PREPARE_UNRECOGNISED_STATEMENT,
 } PrepareResult;
 
