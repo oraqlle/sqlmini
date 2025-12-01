@@ -1,14 +1,14 @@
 /** @brief ABC
  *
- * @file types.h
+ * @file table.h
  */
 
 #ifndef sqlmini_table_h
 #define sqlmini_table_h
 
-#include <stdint.h>
+#include "pager.h"
 
-typedef unsigned char byte_t;
+#include <stdint.h>
 
 #define COLUMN_USERNAME_SIZE 32
 #define COLUMN_EMAIL_SIZE 255
@@ -17,44 +17,42 @@ typedef unsigned char byte_t;
  * @brief ABC
  */
 typedef struct {
-    uint32_t id;
+    uint64_t id;
     char username[COLUMN_USERNAME_SIZE + 1];
     char email[COLUMN_EMAIL_SIZE + 1];
 } Row;
 
 #define size_of_attribute(Struct, Attribute) sizeof(((Struct *)0)->Attribute)
 
-static const uint32_t ID_SIZE = size_of_attribute(Row, id);
-static const uint32_t USERNAME_SIZE = size_of_attribute(Row, username);
-static const uint32_t EMAIL_SIZE = size_of_attribute(Row, email);
-static const uint32_t ID_OFFSET = 0;
-static const uint32_t USERNAME_OFFSET = ID_OFFSET + ID_SIZE;
-static const uint32_t EMAIL_OFFSET = USERNAME_OFFSET + USERNAME_SIZE;
-static const uint32_t ROW_SIZE = ID_SIZE + USERNAME_SIZE + EMAIL_SIZE;
+static const uint64_t ID_SIZE = size_of_attribute(Row, id);
+static const uint64_t USERNAME_SIZE = size_of_attribute(Row, username);
+static const uint64_t EMAIL_SIZE = size_of_attribute(Row, email);
+static const uint64_t ID_OFFSET = 0;
+static const uint64_t USERNAME_OFFSET = ID_OFFSET + ID_SIZE;
+static const uint64_t EMAIL_OFFSET = USERNAME_OFFSET + USERNAME_SIZE;
+static const uint64_t ROW_SIZE = ID_SIZE + USERNAME_SIZE + EMAIL_SIZE;
+static const uint64_t PAGE_SIZE = 4096;
+static const uint64_t ROWS_PER_PAGE = PAGE_SIZE / ROW_SIZE;
+static const uint64_t TABLE_MAX_ROWS = ROWS_PER_PAGE * TABLE_MAX_PAGES;
 
-#define TABLE_MAX_PAGES 100
-static const uint32_t PAGE_SIZE = 4096;
-static const uint32_t ROWS_PER_PAGE = PAGE_SIZE / ROW_SIZE;
-static const uint32_t TABLE_MAX_ROWS = ROWS_PER_PAGE * TABLE_MAX_PAGES;
-
-typedef struct {
-    uint32_t num_rows;
-    byte_t *pages[TABLE_MAX_PAGES];
-} Table;
+struct Table {
+    uint64_t num_rows;
+    Pager *pager;
+};
 
 /**
  * @brief ABC
  */
-Table *new_table(void);
+Table *db_open(const char *filename);
 
 /**
  * @brief ABC
  */
-void free_table(Table *table);
+void db_close(Table *table);
 
 /**
  * @brief ABC
  */
-byte_t *row_slot(Table *table, uint32_t row_num);
+byte_t *row_slot(Table *table, uint64_t row_num);
 
 #endif // sqlmini_table_h

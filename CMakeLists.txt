@@ -13,6 +13,7 @@ add_library(
     src/sqlmini/compiler.c
     src/sqlmini/dbvm.c
     src/sqlmini/input.c
+    src/sqlmini/pager.c
     src/sqlmini/serialize.c
     src/sqlmini/table.c
 )

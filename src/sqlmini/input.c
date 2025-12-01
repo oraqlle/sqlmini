@@ -33,5 +33,5 @@ void read_input(InputBuffer *inbuf) {
 }
 
 void print_row(Row *row) {
-    printf("|  %-.8u  |  %-15s  |  %-15s  |\n", row->id, row->username, row->email);
+    printf("|  %-.8lu  |  %-15s  |  %-15s  |\n", row->id, row->username, row->email);
 }

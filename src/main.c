@@ -27,7 +27,7 @@ MetaCmdResult do_meta_command(InputBuffer *inbuf) {
 
 int main(int argc, char *argv[]) {
     InputBuffer *input_buffer = new_input_buffer();
-    Table *table = new_table();
+    Table *table = db_open("tmp.sqlmini");
 
     while (true) {
         print_prompt();
@@ -81,7 +81,7 @@ int main(int argc, char *argv[]) {
     }
 
     close_input_buffer(input_buffer);
-    free_table(table);
+    db_close(table);
 
     return 0;
 }

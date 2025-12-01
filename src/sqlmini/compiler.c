@@ -20,7 +20,8 @@ PrepareResult prepare_insert(InputBuffer *inbuf, Statement *stmt) {
         if (id_str[0] == '-') {
             return PREPARE_NEGATIVE_ID;
         }
-        uint32_t id = strtoul(id_str, NULL, 10);
+
+        uint64_t id = strtoull(id_str, NULL, 10);
 
         if (strlen(uname) > COLUMN_USERNAME_SIZE) {
             return PREPARE_STRING_TOO_LONG;

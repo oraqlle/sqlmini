@@ -20,7 +20,7 @@ ExecuteResult execute_select(Statement *stmt, Table *table) {
     Row row = {0, "\0", "\0"};
     byte_t *slot = NULL;
 
-    for (uint32_t it = 0; it < table->num_rows; it++) {
+    for (uint64_t it = 0; it < table->num_rows; it++) {
         slot = row_slot(table, it);
         deserialize_row(slot, &row);
         print_row(&row);
