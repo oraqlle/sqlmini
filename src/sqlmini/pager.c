@@ -59,7 +59,7 @@ byte_t *get_page(Pager *pager, uint64_t page_num) {
         byte_t *page = (byte_t *)calloc(PAGE_SIZE, sizeof(byte_t));
         uint64_t num_pages = pager->file_len / PAGE_SIZE;
 
-        if (pager->file_len % PAGE_SIZE) {
+        if (pager->file_len % PAGE_SIZE != 0) {
             num_pages += 1;
         }
 
@@ -74,14 +74,17 @@ byte_t *get_page(Pager *pager, uint64_t page_num) {
                 fread((void *)page, sizeof(byte_t), PAGE_SIZE, pager->file);
 
             if (bytes_read != PAGE_SIZE) {
-                if (feof(pager->file)) {
-                    printf("Error reading file\n");
-                } else if (ferror(pager->file)) {
-                    perror("Error reading file");
-                }
+                // Check bytes read for partial page
+                if (bytes_read % ROW_SIZE != 0) {
+                    if (ferror(pager->file)) { // errors
+                        perror("reading page from file");
+                    } else if (feof(pager->file)) {
+                        printf("reading page from file :: unexpected EOF\n");
+                    }
 
-                fclose(pager->file);
-                exit(EXIT_FAILURE);
+                    fclose(pager->file);
+                    exit(EXIT_FAILURE);
+                }
             }
         }
 
@@ -89,4 +92,28 @@ byte_t *get_page(Pager *pager, uint64_t page_num) {
     }
 
     return pager->pages[page_num];
+}
+
+void pager_flush(Pager *pager, uint64_t page_num, uint64_t page_size) {
+    if (pager->pages[page_num] == NULL) {
+        printf("Tried to flush null page\n");
+        exit(EXIT_FAILURE);
+    }
+
+    if (fseek(pager->file, page_num * PAGE_SIZE, SEEK_SET) != 0) {
+        perror("page flush :: file seeking failed");
+        exit(EXIT_FAILURE);
+    }
+
+    size_t bytes_written =
+        fwrite(pager->pages[page_num], sizeof(byte_t), page_size, pager->file);
+
+    if (bytes_written != page_size) {
+        if (ferror(pager->file)) {
+            perror("page flush :: Error writing page");
+        }
+
+        fclose(pager->file);
+        exit(EXIT_FAILURE);
+    }
 }

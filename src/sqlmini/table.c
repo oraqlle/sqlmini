@@ -60,32 +60,6 @@ void db_close(Table *table) {
     free(table);
 }
 
-void pager_flush(Pager *pager, uint64_t page_num, uint64_t page_size) {
-    if (pager->pages[page_num] == NULL) {
-        printf("Tried to flush null page\n");
-        exit(EXIT_FAILURE);
-    }
-
-    if (fseek(pager->file, page_num * PAGE_SIZE, SEEK_SET) != 0) {
-        perror("page flush :: file seeking failed");
-        exit(EXIT_FAILURE);
-    }
-
-    size_t bytes_written =
-        fwrite(pager->pages[page_num], sizeof(byte_t), page_size, pager->file);
-
-    if (bytes_written != page_size) {
-        if (feof(pager->file)) {
-            printf("page flush :: Error writing page\n");
-        } else if (ferror(pager->file)) {
-            perror("page flush :: Error writing page");
-        }
-
-        fclose(pager->file);
-        exit(EXIT_FAILURE);
-    }
-}
-
 byte_t *row_slot(Table *table, uint64_t row_num) {
     uint64_t page_num = row_num / ROWS_PER_PAGE;
 
