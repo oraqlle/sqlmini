@@ -46,8 +46,8 @@ Pager *pager_open(const char *filename) {
 }
 
 byte_t *get_page(Pager *pager, uint64_t page_num) {
-    if (page_num > TABLE_MAX_PAGES) {
-        printf("Tried to fetch page number out of bounds. %ul > %ul\n", page_num,
+    if (page_num >= TABLE_MAX_PAGES) {
+        printf("Tried to fetch page number out of bounds. %lu > %u\n", page_num,
                TABLE_MAX_PAGES);
         fclose(pager->file);
         exit(EXIT_FAILURE);
@@ -59,11 +59,11 @@ byte_t *get_page(Pager *pager, uint64_t page_num) {
         byte_t *page = (byte_t *)calloc(PAGE_SIZE, sizeof(byte_t));
         uint64_t num_pages = pager->file_len / PAGE_SIZE;
 
-        if (pager->file_len % PAGE_SIZE != 0) {
+        if (pager->file_len % PAGE_SIZE) {
             num_pages += 1;
         }
 
-        if (page_num <= num_pages) {
+        if (page_num < num_pages) {
             if (fseek(pager->file, page_num * PAGE_SIZE, SEEK_SET) != 0) {
                 perror("loading page :: file seeking failed");
                 fclose(pager->file);

@@ -24,7 +24,7 @@ void read_input(InputBuffer *inbuf) {
     ssize_t bytes_read = getline(&inbuf->buf, &inbuf->len, stdin);
 
     if (bytes_read <= 0) {
-        printf("Error reading input\n");
+        printf("input buffer read :: error reading input\n");
         exit(EXIT_FAILURE);
     }
 
