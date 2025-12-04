@@ -7,8 +7,10 @@
 #define sqlmini_dbvm_h
 
 #include "compiler.h"
-#include "table.h"
 
+/**
+ * @brief ABC
+ */
 typedef enum {
     EXECUTE_SUCCESS,
     EXECUTE_TABLE_FULL,

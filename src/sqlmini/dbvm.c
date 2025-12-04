@@ -1,7 +1,9 @@
 #include "dbvm.h"
+#include "cursor.h"
 #include "serialize.h"
 #include "table.h"
 #include <stdint.h>
+#include <stdlib.h>
 
 ExecuteResult execute_insert(Statement *stmt, Table *table) {
     if (table->num_rows >= TABLE_MAX_ROWS) {
@@ -9,22 +11,26 @@ ExecuteResult execute_insert(Statement *stmt, Table *table) {
     }
 
     Row *row_to_insert = &stmt->row_to_insert;
-    byte_t *slot = row_slot(table, table->num_rows);
-    serialize_row(row_to_insert, slot);
+    Cursor *cursor = cursor_at_table_end(table);
+    serialize_row(row_to_insert, cursor_value(cursor));
     table->num_rows += 1;
+
+    free(cursor);
 
     return EXECUTE_SUCCESS;
 }
 
 ExecuteResult execute_select(Statement *stmt, Table *table) {
     Row row = {0, "\0", "\0"};
-    byte_t *slot = NULL;
+    Cursor *cursor = cursor_at_table_end(table);
 
-    for (uint64_t it = 0; it < table->num_rows; it++) {
-        slot = row_slot(table, it);
-        deserialize_row(slot, &row);
+    while (!cursor->end_of_table) {
+        deserialize_row(cursor_value(cursor), &row);
         print_row(&row);
+        cursor_advance(cursor);
     }
+
+    free(cursor);
 
     return EXECUTE_SUCCESS;
 }

@@ -6,6 +6,7 @@
 #ifndef sqlmini_table_h
 #define sqlmini_table_h
 
+#include "cursor.h"
 #include "pager.h"
 
 #include <stdint.h>
@@ -53,6 +54,6 @@ void db_close(Table *table);
 /**
  * @brief ABC
  */
-byte_t *row_slot(Table *table, uint64_t row_num);
+byte_t *cursor_value(Cursor *cursor);
 
 #endif // sqlmini_table_h

@@ -1,9 +1,13 @@
 describe 'database' do
 
+  before do
+    `rm -rf test.db`
+  end
+
   def run_script(commands)
     raw_output = nil
 
-    IO.popen("./build/sqlmini", "r+") do |pipe|
+    IO.popen("./build/sqlmini test.db", "r+") do |pipe|
       commands.each do |cmd|
         pipe.puts cmd
       end

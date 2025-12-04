@@ -11,6 +11,7 @@ project(
 add_library(
     sqlmini OBJECT
     src/sqlmini/compiler.c
+    src/sqlmini/cursor.c
     src/sqlmini/dbvm.c
     src/sqlmini/input.c
     src/sqlmini/pager.c

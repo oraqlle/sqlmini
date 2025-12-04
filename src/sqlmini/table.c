@@ -1,4 +1,5 @@
 #include "table.h"
+#include "cursor.h"
 #include "pager.h"
 
 #include <stdint.h>
@@ -60,10 +61,11 @@ void db_close(Table *table) {
     free(table);
 }
 
-byte_t *row_slot(Table *table, uint64_t row_num) {
+byte_t *cursor_value(Cursor *cursor) {
+    uint64_t row_num = cursor->row_num;
     uint64_t page_num = row_num / ROWS_PER_PAGE;
 
-    byte_t *page = get_page(table->pager, page_num);
+    byte_t *page = get_page(cursor->table->pager, page_num);
     uint64_t row_offset = row_num % ROWS_PER_PAGE;
     uint64_t byte_offset = row_offset * ROW_SIZE;
 
