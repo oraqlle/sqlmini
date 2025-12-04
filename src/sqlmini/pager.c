@@ -6,12 +6,17 @@
 #include <string.h>
 
 Pager *pager_open(const char *filename) {
-    FILE *file = fopen(filename, "ab+");
+    FILE *file = fopen(filename, "rb+");
 
-    // Create file if necessary
     if (file == NULL) {
-        perror("Unable to open file\n");
-        exit(EXIT_FAILURE);
+        // Create file if necessary
+        printf("No file '%s' exists, creating in current directory\n", filename);
+        file = fopen(filename, "wb+");
+
+        if (file == NULL) {
+            perror("Unable to create file");
+            exit(EXIT_FAILURE);
+        }
     }
 
     if (fseek(file, 0L, SEEK_END) != 0) {

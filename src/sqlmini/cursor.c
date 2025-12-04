@@ -24,5 +24,8 @@ Cursor *cursor_at_table_end(Table *table) {
 void cursor_advance(Cursor *cursor) {
     cursor->row_num += 1;
 
-    cursor->end_of_table = cursor->row_num >= cursor->table->num_rows;
+    if (cursor->row_num >= cursor->table->num_rows) {
+        cursor->row_num = cursor->table->num_rows;
+        cursor->end_of_table = true;
+    }
 }

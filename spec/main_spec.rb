@@ -9,7 +9,11 @@ describe 'database' do
 
     IO.popen("./build/sqlmini test.db", "r+") do |pipe|
       commands.each do |cmd|
-        pipe.puts cmd
+        begin
+          pipe.puts cmd
+        rescue Errno::EPIPE
+          break
+        end
       end
 
       pipe.close_write
@@ -17,7 +21,7 @@ describe 'database' do
       raw_output = pipe.gets(nil)
     end
     
-  raw_output.split("\n")
+    raw_output.split("\n")
   end
 
   it 'inserts and retrieves a row' do

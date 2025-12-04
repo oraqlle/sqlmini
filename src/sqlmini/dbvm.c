@@ -22,7 +22,7 @@ ExecuteResult execute_insert(Statement *stmt, Table *table) {
 
 ExecuteResult execute_select(Statement *stmt, Table *table) {
     Row row = {0, "\0", "\0"};
-    Cursor *cursor = cursor_at_table_end(table);
+    Cursor *cursor = cursor_at_table_start(table);
 
     while (!cursor->end_of_table) {
         deserialize_row(cursor_value(cursor), &row);
