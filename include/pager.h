@@ -16,15 +16,15 @@ typedef unsigned char byte_t;
 typedef struct Table Table;
 
 typedef struct {
-    uint64_t file_len;
+    size_t file_len;
     FILE *file;
     byte_t *pages[TABLE_MAX_PAGES];
 } Pager;
 
 Pager *pager_open(const char *filename);
 
-void pager_flush(Pager *pager, uint64_t page_num, uint64_t page_size);
+void pager_flush(Pager *pager, uint32_t page_num, uint32_t page_size);
 
-byte_t *get_page(Pager *pager, uint64_t page_num);
+byte_t *get_page(Pager *pager, uint32_t page_num);
 
 #endif // sqlmini_pager_h

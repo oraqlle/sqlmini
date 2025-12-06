@@ -16,7 +16,7 @@
  */
 typedef struct {
     Table *table;
-    uint64_t row_num;
+    uint32_t row_num;
     bool end_of_table;
 } Cursor;
 

@@ -35,10 +35,10 @@ Pager *pager_open(const char *filename) {
 
     Pager *pager = (Pager *)malloc(sizeof(Pager));
     pager->file = file;
-    pager->file_len = (uint64_t)len;
+    pager->file_len = (size_t)len;
 
-    for (uint64_t i = 0; i < TABLE_MAX_PAGES; i++) {
-        pager->pages[i] = NULL;
+    for (uint32_t idx = 0; idx < TABLE_MAX_PAGES; idx++) {
+        pager->pages[idx] = NULL;
     }
 
     if (fseek(file, 0L, SEEK_SET) != 0) {
@@ -50,9 +50,9 @@ Pager *pager_open(const char *filename) {
     return pager;
 }
 
-byte_t *get_page(Pager *pager, uint64_t page_num) {
+byte_t *get_page(Pager *pager, uint32_t page_num) {
     if (page_num >= TABLE_MAX_PAGES) {
-        printf("Tried to fetch page number out of bounds. %lu > %u\n", page_num,
+        printf("Tried to fetch page number out of bounds. %u > %u\n", page_num,
                TABLE_MAX_PAGES);
         fclose(pager->file);
         exit(EXIT_FAILURE);
@@ -62,14 +62,14 @@ byte_t *get_page(Pager *pager, uint64_t page_num) {
 
         // Cache miss. Allocate memory and load from file
         byte_t *page = (byte_t *)calloc(PAGE_SIZE, sizeof(byte_t));
-        uint64_t num_pages = pager->file_len / PAGE_SIZE;
+        size_t num_pages = pager->file_len / PAGE_SIZE;
 
         if (pager->file_len % PAGE_SIZE != 0) {
             num_pages += 1;
         }
 
         if (page_num < num_pages) {
-            if (fseek(pager->file, page_num * PAGE_SIZE, SEEK_SET) != 0) {
+            if (fseek(pager->file, (long)page_num * PAGE_SIZE, SEEK_SET) != 0) {
                 perror("loading page :: file seeking failed");
                 fclose(pager->file);
                 exit(EXIT_FAILURE);
@@ -99,13 +99,13 @@ byte_t *get_page(Pager *pager, uint64_t page_num) {
     return pager->pages[page_num];
 }
 
-void pager_flush(Pager *pager, uint64_t page_num, uint64_t page_size) {
+void pager_flush(Pager *pager, uint32_t page_num, uint32_t page_size) {
     if (pager->pages[page_num] == NULL) {
         printf("Tried to flush null page\n");
         exit(EXIT_FAILURE);
     }
 
-    if (fseek(pager->file, page_num * PAGE_SIZE, SEEK_SET) != 0) {
+    if (fseek(pager->file, (long)page_num * PAGE_SIZE, SEEK_SET) != 0) {
         perror("page flush :: file seeking failed");
         exit(EXIT_FAILURE);
     }

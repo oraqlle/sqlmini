@@ -6,6 +6,7 @@ Checks: "-*,\
   cert-*,\
   bugprone-*,\
   concurrency-*,\
+  -concurrency-mt-unsafe,\
   misc-*,\
   portability-*,\
   openmp-*,\

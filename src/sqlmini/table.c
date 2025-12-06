@@ -8,33 +8,33 @@
 
 Table *db_open(const char *filename) {
     Pager *pager = pager_open(filename);
-    uint64_t num_rows = pager->file_len / ROW_SIZE;
+    size_t num_rows = pager->file_len / ROW_SIZE;
 
     Table *table = (Table *)malloc(sizeof(Table));
     table->pager = pager;
-    table->num_rows = num_rows;
+    table->num_rows = (uint32_t)num_rows;
 
     return table;
 }
 
 void db_close(Table *table) {
     Pager *pager = table->pager;
-    uint64_t num_full_pages = table->num_rows / ROWS_PER_PAGE;
+    uint32_t num_full_pages = table->num_rows / ROWS_PER_PAGE;
 
-    for (uint64_t it = 0; it < num_full_pages; it++) {
-        if (pager->pages[it] == NULL) {
+    for (uint32_t idx = 0; idx < num_full_pages; idx++) {
+        if (pager->pages[idx] == NULL) {
             continue;
         }
 
-        pager_flush(pager, it, PAGE_SIZE);
-        free(pager->pages[it]);
-        pager->pages[it] = NULL;
+        pager_flush(pager, idx, PAGE_SIZE);
+        free(pager->pages[idx]);
+        pager->pages[idx] = NULL;
     }
 
-    uint64_t num_additional_rows = table->num_rows % ROWS_PER_PAGE;
+    uint32_t num_additional_rows = table->num_rows % ROWS_PER_PAGE;
 
     if (num_additional_rows > 0) {
-        uint64_t page_num = num_full_pages;
+        uint32_t page_num = num_full_pages;
 
         if (pager->pages[page_num] != NULL) {
             pager_flush(pager, page_num, num_additional_rows * ROW_SIZE);
@@ -48,7 +48,7 @@ void db_close(Table *table) {
         exit(EXIT_FAILURE);
     }
 
-    for (uint64_t it = 0; it < TABLE_MAX_PAGES; it++) {
+    for (uint32_t it = 0; it < TABLE_MAX_PAGES; it++) {
         byte_t *page = pager->pages[it];
 
         if (page != NULL) {
@@ -62,12 +62,12 @@ void db_close(Table *table) {
 }
 
 byte_t *cursor_value(Cursor *cursor) {
-    uint64_t row_num = cursor->row_num;
-    uint64_t page_num = row_num / ROWS_PER_PAGE;
+    uint32_t row_num = cursor->row_num;
+    uint32_t page_num = row_num / ROWS_PER_PAGE;
 
     byte_t *page = get_page(cursor->table->pager, page_num);
-    uint64_t row_offset = row_num % ROWS_PER_PAGE;
-    uint64_t byte_offset = row_offset * ROW_SIZE;
+    uint32_t row_offset = row_num % ROWS_PER_PAGE;
+    uint32_t byte_offset = row_offset * ROW_SIZE;
 
     return page + byte_offset;
 }

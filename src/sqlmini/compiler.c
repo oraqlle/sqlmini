@@ -21,7 +21,7 @@ PrepareResult prepare_insert(InputBuffer *inbuf, Statement *stmt) {
             return PREPARE_NEGATIVE_ID;
         }
 
-        uint64_t id = strtoull(id_str, NULL, 10);
+        uint32_t id = (uint32_t)strtoul(id_str, NULL, 10);
 
         if (strlen(uname) > COLUMN_USERNAME_SIZE) {
             return PREPARE_STRING_TOO_LONG;
